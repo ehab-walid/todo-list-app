@@ -1,4 +1,4 @@
-import { createProject } from "./project";
+import { createProject } from "./project.js";
 
 export function ProjectController () {
     let projects = [];

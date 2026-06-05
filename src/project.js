@@ -1,6 +1,6 @@
 // import { TodoItem } from "./todo.js";
 
-import { createTodoItem } from "./todo";
+import { createTodoItem } from "./todo.js";
 
 export const createProject = (project_name) => {
     let todo_list = [];
