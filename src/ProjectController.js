@@ -17,7 +17,11 @@ export function ProjectController () {
         projects.push(project);
     }
 
-    return {getProjects, deleteProject, addProject};
+    const findProject = (id) => {
+        return projects.find((project) => project.getId() === id);
+    }
+
+    return {getProjects, deleteProject, addProject, findProject};
 
     
 }

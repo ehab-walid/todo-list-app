@@ -4,17 +4,76 @@ export const DomController = () => {
   const project_controller = ProjectController();
 
   const project_header = document.querySelector(".project-header ul");
+  const new_project = document.querySelector(".add-project-section");
 
+  const createProjectForm = () => {
+    const form = document.createElement("form");
+    form.setAttribute("action", "#");
+    form.setAttribute("id", "new-project-form");
+
+    // Title
+    const titleLabel = document.createElement("label");
+    titleLabel.setAttribute("for", "project-title");
+    titleLabel.textContent = "Project title";
+
+    const titleInput = document.createElement("input");
+    titleInput.name = "project_title";
+    titleInput.id = "project-title";
+    titleInput.type = "text";
+    titleInput.required = true;
+
+    // Submit
+    const submitBtn = document.createElement("button");
+    submitBtn.type = "submit";
+    // submitBtn.dataset.projectId = project_id;
+    submitBtn.textContent = "Add Project";
+
+    form.appendChild(titleLabel);
+    form.appendChild(titleInput);
+    form.appendChild(submitBtn);
+
+    return form;
+  };
 
   const displayProjects = () => {
+    project_header.replaceChildren();
+    new_project.replaceChildren();
     project_controller.getProjects().forEach((project) => {
       const project_item = document.createElement("li");
       project_header.appendChild(project_item);
       const project_button = document.createElement("button");
       project_item.appendChild(project_button);
       project_button.textContent = project.project_name;
+      project_button.classList.add("project-name");
+      project_button.dataset.id = project.getId();
+    });
+
+    const add_project_btn = document.createElement("button");
+    add_project_btn.classList.add("add-project-btn");
+    new_project.appendChild(add_project_btn);
+    add_project_btn.textContent = "New Project";
+
+    add_project_btn.addEventListener("click", () => {
+      const project_form = createProjectForm();
+      new_project.replaceChildren();
+      new_project.appendChild(project_form);
+      project_form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(project_form);
+        project_controller.addProject(formData.get("project_title"));
+        displayProjects();
+      });
     });
   };
+
+  project_header.addEventListener('click', (e) => {
+    if(e.target.classList.contains('project-name')) {
+        console.log(project_controller.findProject(e.target.dataset.id))
+        displayTodoList(project_controller.findProject(e.target.dataset.id));
+    }
+  })
+
+
 
   const createTodoCard = (title, dueDate, projectId, todoId) => {
     const li = document.createElement("li");
@@ -65,35 +124,29 @@ export const DomController = () => {
       todo_list.appendChild(li);
     });
 
-    const add_todo_btn = document.createElement('button');
+    const add_todo_btn = document.createElement("button");
     add_todo_btn.classList.add("add-todo-btn");
     add_todo_btn.dataset.projectId = project.getId();
     add_todo_btn.textContent = "Add Task";
     add_todo_area.appendChild(add_todo_btn);
 
-    add_todo_btn.addEventListener('click', (e) => {
-        const form = createTodoForm(project.getId());
-        add_todo_area.replaceChildren();
-        add_todo_area.appendChild(form);
+    add_todo_btn.addEventListener("click", (e) => {
+      const form = createTodoForm(project.getId());
+      add_todo_area.replaceChildren();
+      add_todo_area.appendChild(form);
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(form); 
-            project.addTodoItem(
-                formData.get('todo_title'),
-                formData.get('todo_desc'),
-                formData.get('todo_due'),
-                formData.get('todo_priority')
-                // title = formData.get('todo_title'),
-                // description = formData.get('todo_desc'),
-                // dueDate = formData.get('todo_due'),
-                // priority = formData.get('todo_priority')
-            );
-            displayTodoList(project);
-
-        })
-    })
-
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        project.addTodoItem(
+          formData.get("todo_title"),
+          formData.get("todo_desc"),
+          formData.get("todo_due"),
+          formData.get("todo_priority"),
+        );
+        displayTodoList(project);
+      });
+    });
   };
 
   const createTodoForm = (project_id) => {
@@ -173,15 +226,10 @@ export const DomController = () => {
     return form;
   };
 
-
   const initialRender = () => {
     displayProjects();
-    displayTodoList(project_controller.getProjects()[0])
-  }
-
-
-
-
+    displayTodoList(project_controller.getProjects()[0]);
+  };
 
   return { initialRender, displayProjects };
 };
