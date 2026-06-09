@@ -12,14 +12,15 @@ export const DomController = () => {
     form.setAttribute("id", "new-project-form");
 
     // Title
-    const titleLabel = document.createElement("label");
-    titleLabel.setAttribute("for", "project-title");
-    titleLabel.textContent = "Project title";
+    // const titleLabel = document.createElement("label");
+    // titleLabel.setAttribute("for", "project-title");
+    // titleLabel.textContent = "Project title";
 
     const titleInput = document.createElement("input");
     titleInput.name = "project_title";
     titleInput.id = "project-title";
     titleInput.type = "text";
+    titleInput.placeholder = "Title";
     titleInput.required = true;
 
     // Submit
@@ -28,7 +29,7 @@ export const DomController = () => {
     // submitBtn.dataset.projectId = project_id;
     submitBtn.textContent = "Add Project";
 
-    form.appendChild(titleLabel);
+    // form.appendChild(titleLabel);
     form.appendChild(titleInput);
     form.appendChild(submitBtn);
 
@@ -66,14 +67,12 @@ export const DomController = () => {
     });
   };
 
-  project_header.addEventListener('click', (e) => {
-    if(e.target.classList.contains('project-name')) {
-        console.log(project_controller.findProject(e.target.dataset.id))
-        displayTodoList(project_controller.findProject(e.target.dataset.id));
+  project_header.addEventListener("click", (e) => {
+    if (e.target.classList.contains("project-name")) {
+      console.log(project_controller.findProject(e.target.dataset.id));
+      displayTodoList(project_controller.findProject(e.target.dataset.id));
     }
-  })
-
-
+  });
 
   const createTodoCard = (title, dueDate, projectId, todoId) => {
     const li = document.createElement("li");
@@ -89,6 +88,10 @@ export const DomController = () => {
     const cardStatus = document.createElement("div");
     cardStatus.classList.add("card-status");
 
+    const cardCheck = document.createElement("input");
+    cardCheck.classList.add("card-checkbox");
+    cardCheck.setAttribute("name", "todo_status");
+
     const cardTitle = document.createElement("div");
     cardTitle.classList.add("card-title");
     cardTitle.textContent = title;
@@ -97,16 +100,60 @@ export const DomController = () => {
     cardDue.classList.add("card-due");
     cardDue.textContent = `Due on ${dueDate}`;
 
-    cardHeader.appendChild(cardStatus);
-    cardHeader.appendChild(cardTitle);
+    // cardHeader.appendChild(cardStatus);
+    cardStatus.appendChild(cardCheck);
+    // cardHeader.appendChild(cardTitle);
 
-    card.appendChild(cardHeader);
+    card.appendChild(cardStatus);
+    card.appendChild(cardTitle);
     card.appendChild(cardDue);
 
     li.appendChild(card);
 
     return li;
   };
+
+  // const createTodoCard = (title, dueDate, projectId, todoId) => {
+  //   const li = document.createElement("li");
+
+  //   const card = document.createElement("div");
+  //   card.classList.add("todo-card");
+  //   card.dataset.projectId = projectId;
+  //   card.dataset.todoId = todoId;
+
+  //   const cardLeft = document.createElement("div");
+  //   cardLeft.classList.add("card-left");
+
+  //   const cardStatus = document.createElement("div");
+  //   cardStatus.classList.add("card-status");
+
+  //   const cardCheck = document.createElement("input");
+  //   cardCheck.classList.add("card-checkbox");
+  //   cardCheck.setAttribute("name", "todo_status");
+
+  //   const cardRight = document.createElement("div");
+  //   cardRight.classList.add("card-right");
+
+  //   const cardTitle = document.createElement("div");
+  //   cardTitle.classList.add("card-title");
+  //   cardTitle.textContent = title;
+
+  //   const cardDue = document.createElement("div");
+  //   cardDue.classList.add("card-due");
+  //   cardDue.textContent = `Due on ${dueDate}`;
+
+  //   cardLeft.appendChild(cardStatus);
+  //   cardStatus.appendChild(cardCheck);
+  //   cardRight.appendChild(cardTitle);
+  //   cardRight.appendChild(cardDue);
+
+  //   card.appendChild(cardLeft);
+  //   card.appendChild(cardRight);
+
+  //   li.appendChild(card);
+
+  //   return li;
+  // };
 
   const displayTodoList = (project) => {
     const todo_list = document.querySelector(".todo-list");
@@ -153,31 +200,41 @@ export const DomController = () => {
     const form = document.createElement("form");
     form.setAttribute("action", "#");
 
+    const createField = (input) => {
+      const div = document.createElement("div");
+      div.classList.add("label-input");
+      // div.appendChild(label);
+      div.appendChild(input);
+      return div;
+    };
+
     // Title
-    const titleLabel = document.createElement("label");
-    titleLabel.setAttribute("for", "todo-title");
-    titleLabel.textContent = "Title";
+    // const titleLabel = document.createElement("label");
+    // titleLabel.setAttribute("for", "todo-title");
+    // titleLabel.textContent = "Title";
 
     const titleInput = document.createElement("input");
     titleInput.name = "todo_title";
     titleInput.id = "todo-title";
     titleInput.type = "text";
     titleInput.required = true;
+    titleInput.placeholder = "Title";
 
     // Description
-    const descLabel = document.createElement("label");
-    descLabel.setAttribute("for", "todo-desc");
-    descLabel.textContent = "Description";
+    // const descLabel = document.createElement("label");
+    // descLabel.setAttribute("for", "todo-desc");
+    // descLabel.textContent = "Description";
 
     const descInput = document.createElement("input");
     descInput.name = "todo_desc";
     descInput.id = "todo-desc";
     descInput.type = "text";
+    descInput.placeholder = "Description";
 
     // Due date
-    const dueLabel = document.createElement("label");
-    dueLabel.setAttribute("for", "todo-due");
-    dueLabel.textContent = "Due date";
+    // const dueLabel = document.createElement("label");
+    // dueLabel.setAttribute("for", "todo-due");
+    // dueLabel.textContent = "Due date";
 
     const dueInput = document.createElement("input");
     dueInput.name = "todo_due";
@@ -185,16 +242,16 @@ export const DomController = () => {
     dueInput.type = "date";
 
     // Priority
-    const priorityLabel = document.createElement("label");
-    priorityLabel.setAttribute("for", "todo-priority");
-    priorityLabel.textContent = "Priority";
+    // const priorityLabel = document.createElement("label");
+    // priorityLabel.setAttribute("for", "todo-priority");
+    // priorityLabel.textContent = "Priority";
 
     const prioritySelect = document.createElement("select");
     prioritySelect.name = "todo_priority";
     prioritySelect.id = "todo-priority";
 
     const priorityOptions = [
-      { value: "", text: "--Please choose a priority--" },
+      { value: "", text: "Priority" },
       { value: "high", text: "High" },
       { value: "medium", text: "Medium" },
       { value: "low", text: "Low" },
@@ -212,15 +269,18 @@ export const DomController = () => {
     submitBtn.type = "submit";
     submitBtn.dataset.projectId = project_id;
     submitBtn.textContent = "Add Task";
+    submitBtn.classList.add("add-todo-submit-btn");
 
-    form.appendChild(titleLabel);
-    form.appendChild(titleInput);
-    form.appendChild(descLabel);
-    form.appendChild(descInput);
-    form.appendChild(dueLabel);
-    form.appendChild(dueInput);
-    form.appendChild(priorityLabel);
-    form.appendChild(prioritySelect);
+    //     form.appendChild(createField(titleLabel, titleInput));
+    // form.appendChild(createField(descLabel, descInput));
+    // form.appendChild(createField(dueLabel, dueInput));
+    // form.appendChild(createField(priorityLabel, prioritySelect));
+
+    form.appendChild(createField(titleInput));
+    form.appendChild(createField(descInput));
+    form.appendChild(createField(dueInput));
+    form.appendChild(createField(prioritySelect));
+
     form.appendChild(submitBtn);
 
     return form;
