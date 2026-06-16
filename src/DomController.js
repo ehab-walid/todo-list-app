@@ -74,7 +74,7 @@ export const DomController = () => {
     }
   });
 
-  const createTodoCard = (title, dueDate, projectId, todoId) => {
+  const createTodoCard = (title, dueDate, projectId, todoId, priority) => {
     const li = document.createElement("li");
 
     const card = document.createElement("div");
@@ -90,25 +90,54 @@ export const DomController = () => {
 
     const cardCheck = document.createElement("input");
     cardCheck.classList.add("card-checkbox");
+    cardCheck.setAttribute("type", "checkbox");
+    cardCheck.setAttribute("id", `todo-status-${todoId}`);
     cardCheck.setAttribute("name", "todo_status");
+
+    const checkLabel = document.createElement("label");
+    checkLabel.setAttribute("for", `todo-status-${todoId}`);
 
     const cardTitle = document.createElement("div");
     cardTitle.classList.add("card-title");
-    cardTitle.textContent = title;
+
+    const cardTitleText = document.createElement("span");
+    cardTitleText.classList.add("card-title-text");
+    cardTitleText.textContent = title;
 
     const cardDue = document.createElement("div");
     cardDue.classList.add("card-due");
     cardDue.textContent = `Due on ${dueDate}`;
 
-    // cardHeader.appendChild(cardStatus);
+    const cardDeleteDiv = document.createElement("div");
+    cardDeleteDiv.classList.add("card-delete");
+    const cardDeleteBtn = document.createElement("button");
+    cardDeleteBtn.classList.add("card-delete-btn");
+    cardDeleteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete</title><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>`;
+    
+    const cardPriority = document.createElement("div");
+    cardPriority.classList.add("todo-priority");
+    cardPriority.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>alert-circle</title><path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>`;
+    cardPriority.classList.add(priority);
+    // cardPriority.textContent = priority;
+
     cardStatus.appendChild(cardCheck);
-    // cardHeader.appendChild(cardTitle);
+    cardStatus.appendChild(checkLabel);
+    cardTitle.appendChild(cardTitleText);
+    cardDeleteDiv.appendChild(cardDeleteBtn);
 
     card.appendChild(cardStatus);
     card.appendChild(cardTitle);
+    card.appendChild(cardDeleteDiv);
     card.appendChild(cardDue);
+    card.appendChild(cardPriority);
 
     li.appendChild(card);
+    // li.appendChild(cardRightDiv);
+
+    cardCheck.addEventListener("change", () => {
+      cardTitleText.classList.toggle("done", cardCheck.checked);
+      cardDue.classList.toggle("done", cardCheck.checked);
+    });
 
     return li;
   };
@@ -167,6 +196,7 @@ export const DomController = () => {
         todo.getDueDate(),
         project.getId(),
         todo.getId(),
+        todo.getPriority(),
       );
       todo_list.appendChild(li);
     });
