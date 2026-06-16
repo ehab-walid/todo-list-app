@@ -2,17 +2,15 @@
 
 import { createTodoItem } from "./todo.js";
 
-export const createProject = (project_name) => {
+export const createProject = (project_name, id) => {
     let todo_list = [];
-
-    const id  = crypto.randomUUID();
 
     const getId = () => id;
 
     const getTodoList = () => [...todo_list];
 
-    const addTodoItem = (title, description, dueDate, priority) => {
-        const todo_item = createTodoItem(title, description, dueDate, priority);
+    const addTodoItem = (title, description, dueDate, priority, id = crypto.randomUUID()) => {
+        const todo_item = createTodoItem(title, description, dueDate, priority, id);
         todo_list.push(todo_item);
     }
 

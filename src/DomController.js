@@ -6,6 +6,33 @@ export const DomController = () => {
   const project_header = document.querySelector(".project-header ul");
   const new_project = document.querySelector(".add-project-section");
 
+  const saveProjects = () => {
+    const data = project_controller.getProjects().map((project) => ({
+      id: project.getId(),
+      title: project.project_name,
+      todos: project.getTodoList().map((todo) => ({
+        id: todo.getId(),
+        title: todo.getTitle(),
+        description: todo.getDesc(),
+        dueDate: todo.getDueDate(),
+        priority: todo.getPriority(),
+      })),
+    }));
+    localStorage.setItem("projects", JSON.stringify(data));
+  };
+
+  const loadProjects = () => {
+    const data = localStorage.getItem('projects');
+    if (!data) return;
+
+    JSON.parse(data).forEach(projectData => {
+      const project = project_controller.addProject(projectData.title, projectData.id);
+      projectData.todos.forEach((todo) => {
+        project.addTodoItem(todo.title, todo.description, todo.dueDate, todo.priority, todo.id);
+      })
+    });
+  }
+
   const createProjectForm = () => {
     const form = document.createElement("form");
     form.setAttribute("action", "#");
@@ -73,6 +100,7 @@ export const DomController = () => {
         const new_project = project_controller.addProject(
           formData.get("project_title"),
         );
+        saveProjects();
         isFormOpen = false;
         displayProjects();
         document.querySelectorAll(".project-name").forEach((btn) => {
@@ -175,8 +203,6 @@ export const DomController = () => {
       cardDue.classList.toggle("done", cardCheck.checked);
     });
 
-
-
     return li;
   };
 
@@ -264,18 +290,20 @@ export const DomController = () => {
           formData.get("todo_due"),
           formData.get("todo_priority"),
         );
+        saveProjects();
         displayTodoList(project);
       });
     });
 
-    const deleteTodoBtns = document.querySelectorAll('.card-delete-btn');
+    const deleteTodoBtns = document.querySelectorAll(".card-delete-btn");
     deleteTodoBtns.forEach((deleteButton) => {
-      deleteButton.addEventListener('click', (e) => {
+      deleteButton.addEventListener("click", (e) => {
         console.log(deleteButton.dataset.id);
         project.deleteTodoItem(deleteButton.dataset.id);
+        saveProjects();
         displayTodoList(project);
-      })
-    })
+      });
+    });
   };
 
   const createTodoForm = (project_id) => {
@@ -376,8 +404,14 @@ export const DomController = () => {
   };
 
   const initialRender = () => {
+
+    loadProjects();
     displayProjects();
-    displayTodoList(project_controller.getProjects()[0]);
+    const projects = project_controller.getProjects();
+    if (projects.length > 0){
+      displayTodoList(project_controller.getProjects()[0]);
+    }
+    
   };
 
   return { initialRender, displayProjects };

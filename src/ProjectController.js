@@ -2,8 +2,6 @@ import { createProject } from "./project.js";
 
 export function ProjectController () {
     let projects = [];
-    let project_general = createProject('general');
-    projects.push(project_general);
 
     const deleteProject = (id) => {
         let index = projects.findIndex((project) => project.getId() === id);
@@ -12,8 +10,8 @@ export function ProjectController () {
 
     const getProjects = () => [...projects];
 
-    const addProject = (name) => {
-        let project = createProject(name);
+    const addProject = (name, id = crypto.randomUUID()) => {
+        let project = createProject(name, id);
         projects.push(project);
         return project;
     }
