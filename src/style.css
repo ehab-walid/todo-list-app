@@ -49,6 +49,19 @@ body {
 
 .project-header nav li button {
   color: rgb(65, 64, 64);
+  width: calc(100% + 60px);
+  /* width: 100%; */
+  margin-left: -40px;
+  padding: 8px 40px;
+  text-align: start;
+}
+
+.project-header nav li button:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.project-header nav li button.selected {
+  background-color: rgba(0, 0, 0, 0.10);
 }
 
 .projects-section .add-project-btn {
@@ -83,8 +96,6 @@ body {
   color: rgb(209, 51, 51);
 }
 
-
-
 .todo-area {
   background-color: white;
   padding: 20px;
@@ -100,22 +111,22 @@ body {
   display: grid;
   grid-template-columns: 1fr 4fr 4fr;
   gap: 10px;
-  width:fit-content;
+  width: fit-content;
   align-items: center;
 }
 
 .todo-card .card-status {
-    width: fit-content;
-    position: relative;
-    display: flex;
-    align-items: center;
+  width: fit-content;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 .todo-card .card-due {
-    grid-column: 2 / 3;
+  grid-column: 2 / 3;
 }
 
 .todo-card .card-status label {
-  display:block;
+  display: block;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 50%;
@@ -127,7 +138,6 @@ body {
   /* width: 100%; */
   width: 28px;
 }
-
 
 .card-status label:after {
   border: 2px solid #fff;
@@ -156,13 +166,15 @@ body {
   opacity: 1;
 }
 
-.card-title-text, .card-due {
+.card-title-text,
+.card-due {
   position: relative;
   display: inline-block;
   transition: color 0.3s ease;
 }
 
-.card-title-text::after, .card-due::after {
+.card-title-text::after,
+.card-due::after {
   content: "";
   position: absolute;
   left: 0;
@@ -175,14 +187,15 @@ body {
   transition: transform 0.25s ease;
 }
 
-.card-title-text.done, .card-due.done{
+.card-title-text.done,
+.card-due.done {
   color: #aaa;
 }
 
-.card-title-text.done::after, .card-due.done::after {
+.card-title-text.done::after,
+.card-due.done::after {
   transform: scaleX(1);
 }
-
 
 .todo-card .card-title-text {
   text-transform: capitalize;
@@ -190,7 +203,8 @@ body {
   font-weight: 900;
 }
 
-.todo-card .card-delete, .todo-priority {
+.todo-card .card-delete,
+.todo-priority {
   display: grid;
   text-align: center;
 }
@@ -221,7 +235,7 @@ body {
 }
 
 .todo-card .card-due {
-  display:flex;
+  display: flex;
   align-items: center;
 }
 
@@ -243,8 +257,6 @@ body {
 .todo-list li:last-child {
   border-bottom: 0px;
 }
-
-
 
 .add-todo-btn {
   border-radius: 20px;
@@ -316,4 +328,3 @@ form .label-input {
   color: white;
   background-color: rgb(209, 51, 51);
 }
-

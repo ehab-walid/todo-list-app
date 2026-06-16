@@ -49,6 +49,12 @@ export const DomController = () => {
       project_button.dataset.id = project.getId();
     });
 
+    Array.from(document.querySelectorAll(".project-name"))
+      .find(
+        (btn) => btn.dataset.id === project_controller.getProjects()[0].getId(),
+      )
+      ?.classList.add("selected");
+
     const add_project_btn = document.createElement("button");
     add_project_btn.classList.add("add-project-btn");
     new_project.appendChild(add_project_btn);
@@ -64,14 +70,28 @@ export const DomController = () => {
       project_form.addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(project_form);
-        project_controller.addProject(formData.get("project_title"));
+        const new_project = project_controller.addProject(
+          formData.get("project_title"),
+        );
         isFormOpen = false;
         displayProjects();
+        document.querySelectorAll(".project-name").forEach((btn) => {
+          if (btn.dataset.id === new_project.getId()) {
+            btn.classList.add("selected");
+          } else {
+            btn.classList.remove("selected");
+          }
+        });
+        displayTodoList(new_project);
       });
     });
     const bodyArea = document.querySelector("body");
     bodyArea.addEventListener("click", (e) => {
-      if (isFormOpen && (!e.target.closest(".add-project-btn") && !e.target.closest("#new-project-form"))) {
+      if (
+        isFormOpen &&
+        !e.target.closest(".add-project-btn") &&
+        !e.target.closest("#new-project-form")
+      ) {
         isFormOpen = false;
         displayProjects();
       }
@@ -80,6 +100,10 @@ export const DomController = () => {
 
   project_header.addEventListener("click", (e) => {
     if (e.target.classList.contains("project-name")) {
+      document.querySelectorAll(".project-name").forEach((btn) => {
+        btn.classList.remove("selected");
+      });
+      e.target.classList.add("selected");
       console.log(project_controller.findProject(e.target.dataset.id));
       displayTodoList(project_controller.findProject(e.target.dataset.id));
     }
@@ -123,6 +147,7 @@ export const DomController = () => {
     cardDeleteDiv.classList.add("card-delete");
     const cardDeleteBtn = document.createElement("button");
     cardDeleteBtn.classList.add("card-delete-btn");
+    cardDeleteBtn.dataset.id = todoId;
     cardDeleteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete</title><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>`;
 
     const cardPriority = document.createElement("div");
@@ -149,6 +174,8 @@ export const DomController = () => {
       cardTitleText.classList.toggle("done", cardCheck.checked);
       cardDue.classList.toggle("done", cardCheck.checked);
     });
+
+
 
     return li;
   };
@@ -240,6 +267,15 @@ export const DomController = () => {
         displayTodoList(project);
       });
     });
+
+    const deleteTodoBtns = document.querySelectorAll('.card-delete-btn');
+    deleteTodoBtns.forEach((deleteButton) => {
+      deleteButton.addEventListener('click', (e) => {
+        console.log(deleteButton.dataset.id);
+        project.deleteTodoItem(deleteButton.dataset.id);
+        displayTodoList(project);
+      })
+    })
   };
 
   const createTodoForm = (project_id) => {

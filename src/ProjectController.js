@@ -15,6 +15,7 @@ export function ProjectController () {
     const addProject = (name) => {
         let project = createProject(name);
         projects.push(project);
+        return project;
     }
 
     const findProject = (id) => {
