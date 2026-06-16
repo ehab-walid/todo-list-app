@@ -53,17 +53,28 @@ export const DomController = () => {
     add_project_btn.classList.add("add-project-btn");
     new_project.appendChild(add_project_btn);
     add_project_btn.textContent = "New Project";
+    let isFormOpen = false;
 
     add_project_btn.addEventListener("click", () => {
       const project_form = createProjectForm();
       new_project.replaceChildren();
       new_project.appendChild(project_form);
+      isFormOpen = true;
+
       project_form.addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(project_form);
         project_controller.addProject(formData.get("project_title"));
+        isFormOpen = false;
         displayProjects();
       });
+    });
+    const bodyArea = document.querySelector("body");
+    bodyArea.addEventListener("click", (e) => {
+      if (isFormOpen && (!e.target.closest(".add-project-btn") && !e.target.closest("#new-project-form"))) {
+        isFormOpen = false;
+        displayProjects();
+      }
     });
   };
 
@@ -113,7 +124,7 @@ export const DomController = () => {
     const cardDeleteBtn = document.createElement("button");
     cardDeleteBtn.classList.add("card-delete-btn");
     cardDeleteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete</title><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>`;
-    
+
     const cardPriority = document.createElement("div");
     cardPriority.classList.add("todo-priority");
     cardPriority.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>alert-circle</title><path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>`;
@@ -212,6 +223,11 @@ export const DomController = () => {
       add_todo_area.replaceChildren();
       add_todo_area.appendChild(form);
 
+      const cancelBtn = form.querySelector(".cancel-todo-btn");
+      cancelBtn.addEventListener("click", () => {
+        displayTodoList(project);
+      });
+
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(form);
@@ -300,7 +316,13 @@ export const DomController = () => {
     submitBtn.dataset.projectId = project_id;
     submitBtn.textContent = "Add Task";
     submitBtn.classList.add("add-todo-submit-btn");
+    submitBtn.value = "submit";
 
+    const cancelBtn = document.createElement("button");
+    cancelBtn.type = "button";
+    cancelBtn.classList.add("cancel-todo-btn");
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.value = "cancel";
     //     form.appendChild(createField(titleLabel, titleInput));
     // form.appendChild(createField(descLabel, descInput));
     // form.appendChild(createField(dueLabel, dueInput));
@@ -312,6 +334,7 @@ export const DomController = () => {
     form.appendChild(createField(prioritySelect));
 
     form.appendChild(submitBtn);
+    form.appendChild(cancelBtn);
 
     return form;
   };
